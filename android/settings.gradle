@@ -1,0 +1,3 @@
+rootProject.name = 'memoryTraining'
+
+include ':app'
