@@ -35,6 +35,10 @@ const MARKERS = [
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
 
 export default class FitToCoordinates extends React.Component {
+  static navigationOptions = {
+    title: 'StaticMap',
+  };
+
   fitPadding() {
     this.map.fitToCoordinates([MARKERS[2], MARKERS[3]], {
       edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
