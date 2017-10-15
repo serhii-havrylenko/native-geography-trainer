@@ -1,7 +1,18 @@
 {
-  "extends": "airbnb",
+  "plugins": [ "babel", "react", "react-native", "jsx-a11y" ],
+  "extends": [
+    "airbnb",
+    "plugin:react-native/all"
+  ],
   "parser": "babel-eslint",
   "rules": {
-    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }]
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx"] }]
+  },
+  "settings": {
+    "import/resolver": {
+      "reactnative": {
+        "extensions": ['.js', '.jsx', '.json', '.android.js', '.ios.js']
+      }
+    }
   }
 }
