@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  StyleSheet,
   View,
   Dimensions,
   TouchableOpacity,
@@ -8,6 +7,8 @@ import {
 } from 'react-native';
 
 import MapView from 'react-native-maps';
+import PropTypes from 'prop-types';
+import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,6 +21,7 @@ const SPACE = 0.01;
 
 function createMarker(modifier = 1) {
   return {
+    id: modifier,
     latitude: LATITUDE - (SPACE * modifier),
     longitude: LONGITUDE - (SPACE * modifier),
   };
@@ -36,10 +38,25 @@ const DEFAULT_PADDING = {
   top: 40, right: 40, bottom: 40, left: 40,
 };
 
-export default class FitToCoordinates extends React.Component {
+class StaticMap extends React.Component {
   static navigationOptions = {
     title: 'StaticMap',
   };
+
+  static propTypes = {
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+      state: PropTypes.shape({
+        params: PropTypes.shape({
+          name: PropTypes.string,
+        }),
+      }),
+    }).isRequired,
+  };
+  //
+  // static defaultProps = {
+  //   name: '',
+  // };
 
   fitPadding() {
     this.map.fitToCoordinates([MARKERS[2], MARKERS[3]], {
@@ -65,6 +82,7 @@ export default class FitToCoordinates extends React.Component {
   }
 
   render() {
+    const { navigation: { state: { params: { name } } } } = this.props;
     return (
       <View style={styles.container}>
         <MapView
@@ -77,9 +95,9 @@ export default class FitToCoordinates extends React.Component {
             longitudeDelta: LONGITUDE_DELTA,
           }}
         >
-          {MARKERS.map((marker, i) => (
+          {MARKERS.map(marker => (
             <MapView.Marker
-              key={i}
+              key={marker.id}
               coordinate={marker}
             />
           ))}
@@ -89,6 +107,7 @@ export default class FitToCoordinates extends React.Component {
             onPress={() => this.fitPadding()}
             style={[styles.bubble, styles.button]}
           >
+            <Text>Name: {name}</Text>
             <Text>Fit Bottom Two Markers with Padding</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -109,30 +128,4 @@ export default class FitToCoordinates extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  bubble: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 20,
-  },
-  button: {
-    marginTop: 12,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'column',
-    marginVertical: 20,
-    backgroundColor: 'transparent',
-  },
-});
+export default StaticMap;
